@@ -1,8 +1,9 @@
 import { Component } from "@angular/core";
+import { Periodic } from "./periodic/periodic";
 
 @Component({
   selector: "app-root",
-  imports: [],
+  imports: [Periodic],
   templateUrl: "./app.html",
   styleUrls: ["./app.css"],
 })
