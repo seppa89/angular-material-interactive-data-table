@@ -6,6 +6,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { EditableDirective } from "../popup/popup-directive";
 import { PeriodicElement } from "./store/periodic.model";
 import { PeriodicsStore } from "./store/periodic.store";
 
@@ -19,6 +21,8 @@ import { PeriodicsStore } from "./store/periodic.store";
     MatIconModule,
     MatTableModule,
     MatProgressSpinner,
+    EditableDirective,
+    MatTooltipModule,
   ],
   templateUrl: "./periodic.html",
   styleUrl: "./periodic.css",
@@ -69,6 +73,8 @@ export class Periodic implements OnInit {
 
   clearFilter(input: HTMLInputElement) {
     input.value = "";
-    this.store.updateFilter("");
+
+    this.periodics.filter = "";
+    this.store.clearFilter();
   }
 }

@@ -14,3 +14,17 @@ table {
   font-size: 14px;
   width: 100%;
 }
+
+.icon {
+  float: right;
+  visibility: hidden;
+  transition: visibility 0.1s ease-in-out;
+
+  svg {
+    fill: #c4c4c4;
+  }
+}
+
+.mat-mdc-cell:hover .icon {
+  visibility: visible;
+}

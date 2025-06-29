@@ -1,0 +1,29 @@
+<div
+  class="popup-handle"
+  cdkDrag
+  cdkDragHandle
+  cdkDragRootElement=".cdk-overlay-pane"
+>
+  <mat-icon>open_with</mat-icon>
+</div>
+<div class="popup-header">
+  <h2 mat-dialog-title>Update</h2>
+  <p>row ({{ data.element.id }}) | column ({{ data.element.key }})</p>
+</div>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Current value: {{ data.value }}</mat-label>
+    <input matInput [(ngModel)]="value" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions>
+  <button matButton="outlined" (click)="dialogRef.close()">
+    <mat-icon>close</mat-icon>
+    Cancel
+  </button>
+  <button matButton="outlined" [disabled]="!value" (click)="onSave()">
+    <mat-icon>save</mat-icon>
+    Save
+  </button>
+</mat-dialog-actions>
