@@ -1,9 +1,16 @@
-import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import { PeriodicElement } from "./periodic.model";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
-import { delay, of, pipe, switchMap } from "rxjs";
-import { on } from "@ngrx/signals/events";
+import { rxMethod } from "@ngrx/signals/rxjs-interop";
+import {
+  debounceTime,
+  delay,
+  distinctUntilChanged,
+  of,
+  pipe,
+  switchMap,
+  tap,
+} from "rxjs";
 import { ELEMENT_DATA } from "./mock-data";
+import { PeriodicElement } from "./periodic.model";
 
 type PeriodicsState = {
   periodics: PeriodicElement[];
@@ -25,11 +32,20 @@ export const PeriodicsStore = signalStore(
       pipe(
         switchMap(() => {
           patchState(store, { loading: true });
-          return of(ELEMENT_DATA).pipe(delay(2000));
+          return of(ELEMENT_DATA).pipe(delay(1000));
         }),
         switchMap((periodics) => {
           patchState(store, { periodics, loading: false });
           return of(null);
+        })
+      )
+    ),
+    updateFilter: rxMethod<string>(
+      pipe(
+        debounceTime(2000),
+        distinctUntilChanged(),
+        tap((query) => {
+          patchState(store, { filter: { query } });
         })
       )
     ),

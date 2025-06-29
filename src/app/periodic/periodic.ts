@@ -4,13 +4,10 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { PeriodicElement } from "./store/periodic.model";
 import { PeriodicsStore } from "./store/periodic.store";
-import {
-  MatProgressSpinner,
-  MatSpinner,
-} from "@angular/material/progress-spinner";
 
 @Component({
   selector: "app-periodic",
@@ -53,11 +50,12 @@ export class Periodic implements OnInit {
   ];
 
   protected readonly displayedColumns = this.columns.map((c) => c.columnDef);
-  store = inject(PeriodicsStore);
+  protected store = inject(PeriodicsStore);
 
   constructor() {
     effect(() => {
       this.periodics.data = this.store.periodics();
+      this.periodics.filter = this.store.filter().query;
     });
   }
 
@@ -66,6 +64,11 @@ export class Periodic implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-    this.periodics.filter = filterValue.trim().toLowerCase();
+    this.store.updateFilter(filterValue.trim());
+  }
+
+  clearFilter(input: HTMLInputElement) {
+    input.value = "";
+    this.store.updateFilter("");
   }
 }
