@@ -1,12 +1,16 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, effect, inject, OnInit } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { ELEMENT_DATA } from "./store/mock-data";
 import { PeriodicElement } from "./store/periodic.model";
+import { PeriodicsStore } from "./store/periodic.store";
+import {
+  MatProgressSpinner,
+  MatSpinner,
+} from "@angular/material/progress-spinner";
 
 @Component({
   selector: "app-periodic",
@@ -17,12 +21,13 @@ import { PeriodicElement } from "./store/periodic.model";
     MatButtonModule,
     MatIconModule,
     MatTableModule,
+    MatProgressSpinner,
   ],
   templateUrl: "./periodic.html",
   styleUrl: "./periodic.css",
 })
-export class Periodic {
-  readonly periodics = new MatTableDataSource(ELEMENT_DATA);
+export class Periodic implements OnInit {
+  periodics = new MatTableDataSource<PeriodicElement>([]);
 
   columns = [
     {
@@ -47,7 +52,18 @@ export class Periodic {
     },
   ];
 
-  readonly displayedColumns = this.columns.map((c) => c.columnDef);
+  protected readonly displayedColumns = this.columns.map((c) => c.columnDef);
+  store = inject(PeriodicsStore);
+
+  constructor() {
+    effect(() => {
+      this.periodics.data = this.store.periodics();
+    });
+  }
+
+  ngOnInit(): void {
+    this.store.fakeFetchData();
+  }
 
   applyFilter(filterValue: string) {
     this.periodics.filter = filterValue.trim().toLowerCase();
